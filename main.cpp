@@ -71,11 +71,13 @@ int main()
 
 		int choice;
 		cin >> choice;
+		cin.ignore();
 
 		if (choice == 1)
 		{
 			cout << "What is the address of the building?" << endl;
 			string address;
+
 			getline(cin, bldg.address);
 
 		}
@@ -89,28 +91,37 @@ int main()
 			cout << "What is the height of the room?" << endl;
 			float height;
 			cin >> height;
+			cin.ignore();
 
 			cout << "What is the name of the room?" << endl;
 			string name;
 			getline(cin, name);
 
-			void AddRoom(string name, float width, float height);
+			bldg.AddRoom(name, width, height);
 
 			
 		}
 		
 		else if (choice == 3)
 		{
-			cout << bldg.address << endl;
-			cout << bldg.totalRooms << endl;
+			cout << "----------------------------" << endl;
+			cout << "The Building address is: " <<bldg.address << endl;
+			cout << "----------------------------" << endl;
+			cout << "The Building has " << bldg.totalRooms << endl;
+			cout << "----------------------------" << endl;
 			
 			for (int i = 0; i < bldg.totalRooms; i++)
 			{
-				cout << bldg.rooms[i].name << endl;
-				cout << bldg.rooms[i].height << endl;
-				cout << bldg.rooms[i].width << endl;
-				cout << bldg.rooms[i].GetArea() << endl;
-				cout << bldg.rooms[i].GetPerimeter() << endl;
+				cout << "The Room name is " << bldg.rooms[i].name << endl;
+				cout << "----------------------------" << endl;
+				cout << "The Room height is " << bldg.rooms[i].height << endl;
+				cout << "----------------------------" << endl;
+				cout << "The Room width is " << bldg.rooms[i].width << endl;
+				cout << "----------------------------" << endl;
+				cout << "The Room area is " << bldg.rooms[i].GetArea() << endl;
+				cout << "----------------------------" << endl;
+				cout << "The Room perimeter is " << bldg.rooms[i].GetPerimeter() << endl;
+				cout << "----------------------------" << endl;
 			}
 
 			
