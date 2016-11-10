@@ -1,139 +1,205 @@
 #include <iostream>
 #include <string>
-#include <fstream>
+#include <ostream>
+#include <istream>
 using namespace std;
 
-struct Room
+enum ReadingStatus { NOT_STARTED = 0, READING = 1, FINISHED = 2 };
+enum PurchaseStatus { OWNED = 0, WISHLIST = 1 };
+
+struct Book
 {
-	float width, height;
 
-	string name;
+	string title;
+	string author;
+	ReadingStatus readingStatus;
+	PurchaseStatus purchaseStatus;
 
-	float GetArea()
+	string ReadingStatusString()
 	{
-		return width*height;
+		if (readingStatus == NOT_STARTED)
+		{
+			return "Not Started";
+		}
+		else if (readingStatus == READING)
+		{
+			return "Reading";
+		}
+		else if (readingStatus == FINISHED)
+		{
+			return "Finished";
+		}
+		else
+		{
+			return "?";
+		}
 	}
 
-	float GetPerimeter()
+	string PurchaseStatusString()
 	{
-		return (2 * width) + (2 * height);
+		if (purchaseStatus == OWNED)
+		{
+			return "Owned";
+		}
+		else if (purchaseStatus == WISHLIST)
+		{
+			return "Wishlist";
+		}
+		else
+		{
+			return "?";
+		}
 	}
-
+				
 };
 
 
 
-struct Building
+
+void SetBook(Book & book, string title, string author, PurchaseStatus ps, ReadingStatus rs)
 {
-	string address;
+	book.title = title;
+	book.author = author;
+	book.purchaseStatus = ps;
+	book.readingStatus = rs;
 
-	Room rooms[10];
+}
 
-	int totalRooms;
 
-	Building()
+
+
+void DisplayBook(Book book)
+{
+	cout << "----------------------------------" << endl;
+	cout << book.title << " by " << book.author << endl;
+	cout << "Purchase: " << book.PurchaseStatusString() << ", " << "Reading: " << book.ReadingStatusString() << endl;
+	
+}
+
+
+int GetValidInput(int min, int max)
+{
+	int choice;
+	cout << "Input: " << endl;
+	cin >> choice;
+
+	while (choice < min || choice > max)
 	{
-		address = "not set";
-		totalRooms = 0;
+		cout << "Invalid Number!!!" << endl;
+		cout << "Input: " << endl;
+		cin >> choice;
 	}
 
-	void AddRoom(string newName, float newWidth, float newHeight)
-	{
-		Room newRoom;
-		newRoom.width = newWidth;
-		newRoom.height = newHeight;
-		newRoom.name = newName;
+	cin.ignore();
 
-		rooms[totalRooms] = newRoom;
-		totalRooms++;
+	return choice;
 		
+}
+
+
+
+void AddBookMenu(Book books[100], int &bookCount)
+{
+	string title;
+	string author;
+
+	cout << "Enter a title: " << endl;
+	getline(cin, title);
+
+	cout << "Enter an author: " << endl;
+	getline(cin, author);
+
+	cout << endl << "Purchase Status:" << endl;
+	cout << "\t" << OWNED << ". " << PurchaseStatusString(OWNED) << endl;
+	cout << "\t" << WISHLIST << ". " << PurchaseStatusString(WISHLIST) << endl;
+
+	ps = GetValidInput(OWNED, WISHLIST);
+	rs = GetValidInput(NOT_STARTED, FINISHED);
+
+	SetBook(books[bookCount], title, author, (PurchaseStatus)ps, (ReadingStatus)rs);
+
+	bookCount++;
+
+}
+
+
+
+void DisplayBookList(Book books[100], int bookCount)
+{
+	for (int i = 0; i < bookCount; i++)
+	{
+		DisplayBook(books[i]);
 	}
+}
 
 
 
-};
+void UpdateBookMenu(Book books[100], int &bookCount)
+{
+	DisplayBookList(books, bookCount);
+
+	cout << "What do you want to update?" << endl;
+	int index;
+	GetValidInput(index, bookCount);
+
+	string title;
+	string author;
+	PurchaseStatus ps;
+	ReadingStatus rs;
+
+	title = books[index].title;
+	author = books[index].author;
+	ps = books[index].ps;
+	rs = books[index].rs;
+
+	cout << "What do you want to update in another menu?" << endl;
+	cout << "1. Update title" << endl;
+	cout << "2. Update author " << endl;
+	cout << "3. Update purchase status " << endl;
+	cout << "4. Update reading status" << endl;
+
+	GetValidInput(index, bookCount);
+
+	//Get the user's input (again, through GetValidInput), and use an if or switch statement.
+	//Based on the user's input, have them either enter a new title (to the title variable), author (to the author variable), purchase status, or reading status.
+	//Note: For the status variables, you might need to create a temporary int variable and then cast their input to the proper value, similar to in AddBook.
+
+}
+
+
+
+void MainMenu(Book books[100], int &bookCount)
+{
+	cout << "1. Add book" << endl;
+	cout << "2. Update book" << endl;
+	cout << "3. Display book list" << endl;
+	cout << "4. Quit" << endl;
+
+	GetValidInput(1, 4);
+
+	/*Get the user's input with the GetValidInput function, then use a switch or if statement to decide what to do.
+
+	Add book - call AddBookMenu
+		Update book - call UpdateBookMenu
+		Display book list - call DisplayBookMenu
+		Quit - stop the program loop.*/
+
+	
+
+
+
+
+}
+
 
 
 
 int main()
 {
-	
-	
-	Building bldg;
 
-	bool done = false;
-	while (!done)
-	{
-		cout << "1. Set Building address" << endl;
-		cout << "2. Add Room" << endl;
-		cout << "3. View all building information" << endl;
-		cout << "4. Quit" << endl;
+	Book books[100];
+	int bookCount = 0;
 
-		int choice;
-		cin >> choice;
-		cin.ignore();
-
-		if (choice == 1)
-		{
-			cout << "What is the address of the building?" << endl;
-			string address;
-
-			getline(cin, bldg.address);
-
-		}
-		
-		else if (choice == 2)
-		{
-			cout << "What is the width of the room?" << endl;
-			float width;
-			cin >> width;
-
-			cout << "What is the height of the room?" << endl;
-			float height;
-			cin >> height;
-			cin.ignore();
-
-			cout << "What is the name of the room?" << endl;
-			string name;
-			getline(cin, name);
-
-			bldg.AddRoom(name, width, height);
-
-			
-		}
-		
-		else if (choice == 3)
-		{
-			cout << "----------------------------" << endl;
-			cout << "The Building address is: " <<bldg.address << endl;
-			cout << "----------------------------" << endl;
-			cout << "The Building has " << bldg.totalRooms << endl;
-			cout << "----------------------------" << endl;
-			
-			for (int i = 0; i < bldg.totalRooms; i++)
-			{
-				cout << "The Room name is " << bldg.rooms[i].name << endl;
-				cout << "----------------------------" << endl;
-				cout << "The Room height is " << bldg.rooms[i].height << endl;
-				cout << "----------------------------" << endl;
-				cout << "The Room width is " << bldg.rooms[i].width << endl;
-				cout << "----------------------------" << endl;
-				cout << "The Room area is " << bldg.rooms[i].GetArea() << endl;
-				cout << "----------------------------" << endl;
-				cout << "The Room perimeter is " << bldg.rooms[i].GetPerimeter() << endl;
-				cout << "----------------------------" << endl;
-			}
-
-			
-		}
-		
-		else if (choice == 4)
-		{
-			done = true;
-		}
-	}
-	
-	
 
 
 	return 0;
